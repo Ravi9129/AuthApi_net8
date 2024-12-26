@@ -10,6 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
 // Add JWT Authentication
 builder.Services.AddAuthentication(options =>
@@ -19,7 +26,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;  // For development, use true in production
+    options.RequireHttpsMetadata = false;  // Set true in production for HTTPS
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -50,7 +57,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();  // This will generate Swagger UI at /swagger
 }
-
+app.UseCors(options =>
+       options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 // Enable Authentication & Authorization
 app.UseAuthentication();  // Add Authentication Middleware
 app.UseAuthorization();   // Add Authorization Middleware

@@ -15,7 +15,7 @@ namespace Fantasy.Controllers
     {
         private readonly IUserService _userService;
 
-        private const string SecretKey = "YourSecureAndLongSecretKey12345678901234";
+        private const string SecretKey = "YourSecureAndLongSecretKey12345678901234"; // You may want to store this securely in appsettings or environment variables.
 
         public AuthController(IUserService userService)
         {
@@ -25,6 +25,7 @@ namespace Fantasy.Controllers
         [HttpPost("register")]
         public IActionResult Register(User user)
         {
+            // Ensure that the username doesn't already exist
             if (_userService.Authenticate(user.Username, user.Password) != null)
             {
                 return BadRequest("Username already exists.");
@@ -64,9 +65,8 @@ namespace Fantasy.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            // For JWT, there is no state to clear on the server side, but we can add logic if needed
-            // Example: Revoke token or handle session invalidation
-
+            // JWT doesn't have a "server-side" session, so there is nothing to clear on the server side.
+            // You could implement logic to invalidate the token or handle it client-side (e.g., remove it from storage).
             return Ok(new { message = "Logged out successfully." });
         }
     }

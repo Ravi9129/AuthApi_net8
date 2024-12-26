@@ -1,4 +1,4 @@
-@Fantasy_HostAddress = http://localhost:5031
+@Fantasy_HostAddress = http://localhost:5152
 
 GET {{Fantasy_HostAddress}}/weatherforecast/
 Accept: application/json
